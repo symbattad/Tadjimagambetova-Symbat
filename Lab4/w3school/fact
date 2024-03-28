@@ -1,0 +1,17 @@
+#function
+def fact(x):
+    a = 1
+    b = 1
+    if x == 0:
+        a = 1
+    if x < 0:
+        print('enter valid whole number!')
+    if x > 0:
+        while b < x:
+            a = a * b
+            b += 1
+    yield a
+#main
+z = input('Enter a number')
+g = (fact(n) for n in range (0,int(z)))
+print(next(g))

@@ -1,7 +1,7 @@
-num = int(input("Enter a number: "))
-def func(num):
-    for i in range(num+1):
-        if i%3==0 or i%4==0:
-            print(i,end=",")
+def gen(n):
+    a = (i for i in range(1,n+1) if i % 3 == 0 and i % 4 ==0)
+    for i in a:
+        print(i)
 
-func(num)
+n = int(input())
+gen(n)

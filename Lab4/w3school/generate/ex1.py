@@ -1,10 +1,3 @@
-import math
-def square(num):
-    n=1
-    while n!=num:
-       result=pow(n,2)
-       n+=1
-       print(result)
-
-num=5
-square(num)
+n = int(input())
+a = [i ** 2 for i in range(1,n+1)]
+print(a)

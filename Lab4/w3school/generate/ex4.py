@@ -1,7 +1,7 @@
-a = int(input(" "))
-b = int(input(" "))
-def squares(a, b):
-    return (num ** 2 for num in range(a, b + 1))
-print("Squares of numbers from", a, "to", b)
-for square in squares(a, b):
-    print(square)
+def squares(a,b):
+    for i in range(a,b+1):
+        yield i**2
+a = int(input())
+b = int(input())
+for j in squares(a,b):
+    print(j)

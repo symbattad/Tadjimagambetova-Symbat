@@ -5,3 +5,4 @@ path = input("Enter path: ")
 with open (path, 'r') as file:
     count_lines = len(file.readlines())
     print("The number of lines in the given file is: ", count_lines)
+    

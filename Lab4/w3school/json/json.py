@@ -4,7 +4,7 @@ print("=========================================================================
 print("DN                                                 Description           Speed    MTU  ")
 print("-------------------------------------------------- --------------------  ------  ------")
 
-with open("/Users/aruzhantleukul/tsis4/ sample-data.json", "r") as file:
+with open("\Users\symba\Tadjimagambetova-Symbat\Lab2", "r") as file:
     data = json.load(file)
     for item in data['imdata']:
         print(f"{item['l1PhysIf']['attributes']['dn']}                              {item['l1PhysIf']['attributes']['speed']}   {item['l1PhysIf']['attributes']['mtu']}")
