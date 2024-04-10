@@ -4,12 +4,12 @@ from datetime import datetime as dt
 pygame.init()
 screen = pygame.display.set_mode((590, 620))
 pygame.display.set_caption("mickey mouse watch")
-suret = pygame.image.load(r'C:\Users\symba\Desktop\fotomici.jpg')
+suret = pygame.image.load(r'C:\Users\symba\Downloads\mainclock.png')
 suret = pygame.transform.scale(suret, (590, 620)) 
-suret2 = pygame.image.load(r'C:\Users\symba\Desktop\hand2.jpg')
-suret2 = pygame.transform.scale(suret2, (1000,1430)) 
-suret3 = pygame.image.load(r'C:\Users\symba\Desktop\hand1.jpg')
-suret3 = pygame.transform.scale(suret3, (80,630)) 
+suret2 = pygame.image.load(r'C:\Users\symba\Downloads\rightarm.png')
+suret2 = pygame.transform.scale(suret2, (1000,930)) 
+suret3 = pygame.image.load(r'C:\Users\symba\Downloads\leftarm.png')
+suret3 = pygame.transform.scale(suret3, (70,430)) 
 clock = pygame.time.Clock()
 
 running = True
