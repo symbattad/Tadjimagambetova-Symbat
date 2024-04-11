@@ -1,43 +1,91 @@
-# Imports
 import pygame
-import sys
 from pygame.locals import *
 import random
+import time
+import sys
 
-# Initializing
+# Инициализация Pygame
 pygame.init()
 
-# Setting up FPS
+# Установка частоты обновления экрана (FPS)
 FPS = 60
 FramePerSec = pygame.time.Clock()
 
-# Creating colors
+# Определение цветов
 BLUE = (0, 0, 255)
 RED = (255, 0, 0)
 GREEN = (0, 255, 0)
 BLACK = (0, 0, 0)
 WHITE = (255, 255, 255)
 
-# Other Variables for use in the program
+# Размеры экрана
 SCREEN_WIDTH = 400
 SCREEN_HEIGHT = 600
-SPEED = 5
-score = 0
 
-# Setting up Fonts
+# Начальная скорость, счет и количество монет
+SPEED = 5
+SCORE = 0
+COINS = 0
+
+# Шрифты для отображения текста на экране
 font = pygame.font.SysFont("Verdana", 60)
 font_small = pygame.font.SysFont("Verdana", 20)
 game_over = font.render("Game Over", True, BLACK)
 
+# Загрузка фонового изображения
 background = pygame.image.load(r"C:\Users\symba\Downloads\PygameTutorial_3_0\AnimatedStreet.png")
 
-# Create a white screen
+# Создание окна игры
 DISPLAYSURF = pygame.display.set_mode((400, 600))
 DISPLAYSURF.fill(WHITE)
 pygame.display.set_caption("Game")
 
-
+# Класс для монет
 class Coin(pygame.sprite.Sprite):
+    
+    def __init__(self):
+        super().__init__()
+        self.image = pygame.image.load(r"C:\Users\symba\Pictures\coinmy.png")
+        self.rect = self.image.get_rect()
+        self.rect.center = (random.randint(40, SCREEN_WIDTH - 40), 0)
+
+    def contact(self):
+        global COINS, SPEED
+        SPEED += 1
+        COINS += 1
+        self.rect.top = 0
+        self.rect.center = (random.randint(40, SCREEN_WIDTH - 40), 0)
+    
+    def move(self):
+        self.rect.move_ip(0, SPEED)
+        if (self.rect.top > 600):
+            self.rect.top = 0
+            self.rect.center = (random.randint(40, SCREEN_WIDTH - 40), 0)
+
+# Класс для больших монет
+class Coin_big(pygame.sprite.Sprite):
+    
+    def __init__(self):
+        super().__init__()
+        self.image = pygame.image.load(r"C:\Users\symba\Pictures\coinbig.png")
+        self.rect = self.image.get_rect()
+        self.rect.center = (random.randint(40, SCREEN_WIDTH - 40), 0)
+
+    def contact(self):
+        global COINS, SPEED
+        SPEED += 2
+        COINS += 1
+        self.rect.top = 0
+        self.rect.center = (random.randint(40, SCREEN_WIDTH - 40), 0)
+    
+    def move(self):
+        self.rect.move_ip(0, SPEED)
+        if (self.rect.top > 600):
+            self.rect.top = 0
+            self.rect.center = (random.randint(40, SCREEN_WIDTH - 40), 0)
+
+# Класс для врагов (препятствий)
+class Enemy(pygame.sprite.Sprite):
     def __init__(self):
         super().__init__()
         self.image = pygame.image.load(r"C:\Users\symba\Downloads\PygameTutorial_3_0\Enemy.png")
@@ -45,13 +93,14 @@ class Coin(pygame.sprite.Sprite):
         self.rect.center = (random.randint(40, SCREEN_WIDTH - 40), 0)
 
     def move(self):
-        global score
+        global SCORE
         self.rect.move_ip(0, SPEED)
-        if self.rect.bottom > 600:
+        if (self.rect.top > 600):
+            SCORE += 1
             self.rect.top = 0
             self.rect.center = (random.randint(40, SCREEN_WIDTH - 40), 0)
 
-
+# Класс для игрока
 class Player(pygame.sprite.Sprite):
     def __init__(self):
         super().__init__()
@@ -69,56 +118,66 @@ class Player(pygame.sprite.Sprite):
             if pressed_keys[K_RIGHT]:
                 self.rect.move_ip(5, 0)
 
-
-# Setting up Sprites
+# Создание объектов игрока, монет, врагов
 P1 = Player()
+E1 = Enemy()
 C1 = Coin()
 
-# Creating Sprites Groups
+# Создание групп спрайтов для монет, врагов и всех спрайтов
+friends = pygame.sprite.Group()
+friends.add(C1)
 enemies = pygame.sprite.Group()
-coins = pygame.sprite.Group()
-coins.add(C1)
+enemies.add(E1)
 all_sprites = pygame.sprite.Group()
 all_sprites.add(P1)
+all_sprites.add(E1)
 all_sprites.add(C1)
 
-# Adding a new User event
+# Установка таймера для увеличения скорости через определенное время
 INC_SPEED = pygame.USEREVENT + 1
 pygame.time.set_timer(INC_SPEED, 1000)
 
-# Game Loop
+# Основной игровой цикл
 while True:
-
-    # Cycles through all events occuring
+    
     for event in pygame.event.get():
-        if event.type == INC_SPEED:
-            SPEED += 0.5
         if event.type == QUIT:
             pygame.quit()
             sys.exit()
 
-    # Handle player movement
-    P1.move()
-
-    # Draw background
+    # Отрисовка фонового изображения
     DISPLAYSURF.blit(background, (0, 0))
+    
+    # Отрисовка количества монет
+    coins = font_small.render(str(COINS), True, BLACK)
+    DISPLAYSURF.blit(coins, (360, 10))
 
-    # Draw score
-    scores = font_small.render(str(score), True, BLACK)
-    DISPLAYSURF.blit(scores, (380, 10))
-
-    # Move and draw all sprites
+    # Обновление позиций и движение всех спрайтов
     for entity in all_sprites:
-        entity.move()
         DISPLAYSURF.blit(entity.image, entity.rect)
-
-    # Check for collisions with coins
-    collisions = pygame.sprite.spritecollide(P1, coins, True)
-    for coin in collisions:
-        score += 1
-        C1 = Coin()
-        coins.add(C1)
+        entity.move()
+    
+    # Проверка столкновения игрока с монетой
+    if pygame.sprite.spritecollideany(P1, friends):
+        C1.contact()
+        for entity in friends:
+            entity.kill()
+        C1 = random.choice([Coin, Coin_big])()  # Случайный выбор типа монеты
+        friends.add(C1)
         all_sprites.add(C1)
 
+    # Проверка столкновения игрока с врагом (препятствием)
+    if pygame.sprite.spritecollideany(P1, enemies):
+        pygame.mixer.Sound(r"C:\Users\symba\Downloads\PygameTutorial_3_0\crash.wav").play()
+        time.sleep(0.5)
+        DISPLAYSURF.fill(RED)
+        DISPLAYSURF.blit(game_over, (30, 250))
+        pygame.display.update()
+        for entity in all_sprites:
+            entity.kill()
+        time.sleep(0.5)
+        pygame.quit()
+        sys.exit()
+    
     pygame.display.update()
     FramePerSec.tick(FPS)
