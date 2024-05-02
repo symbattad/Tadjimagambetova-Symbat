@@ -14,7 +14,7 @@ def start_new_game():
     dx, dy = 0, 0
     score = 0
     fps = 5
-
+    
     pygame.init()
     screen = pygame.display.set_mode((RES, RES))
     pygame.display.set_caption("NazarSal")

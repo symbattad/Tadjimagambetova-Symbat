@@ -11,11 +11,11 @@ WIDTH = 800
 HEIGHT = 600
 active_size = 0
 active_color = WHITE
-
+#cоздаем окно игры с загаловоком Пейнт
 screen = pygame.display.set_mode([WIDTH, HEIGHT])
 pygame.display.set_caption('Paint!')
 painting = []
-
+#рисуем меню нашей игры кисти и прямоугольнки
 def draw_menu(size, color):
     pygame.draw.rect(screen, GRAY, [0, 0, WIDTH, 70])
     pygame.draw.line(screen, BLACK, (0,70), (WIDTH,70), 3)
@@ -40,7 +40,7 @@ def draw_menu(size, color):
 
     pygame.draw.circle(screen, color, (400, 35), 30)
     pygame.draw.circle(screen, 'dark gray', (400, 35), 30, 3)
-
+    #меню выбора кистей и цветов где есть возможность выбирать цвет который будет использоваться при рисовании
     blue = pygame.draw.rect(screen, (0, 0, 255), [WIDTH -35, 10, 25, 25])
     red = pygame.draw.rect(screen, (255, 0, 0), [WIDTH -35, 35, 25, 25])
     green = pygame.draw.rect(screen, (0, 255, 0), [WIDTH -60, 10, 25, 25])
@@ -58,7 +58,7 @@ def draw_menu(size, color):
 def draw_painting(paints):
     for i in range(len(paints)):
         pygame.draw.circle(screen, paints[i][0], paints[i][1], paints[i][2])
-
+#обновление экрана
 run = True
 while run:
     timer.tick(fps)
@@ -78,7 +78,7 @@ while run:
     for event in pygame.event.get():
         if event.type == pygame.QUIT:
             run = False
-        
+# код реагирует на щелчки мыши     
         if event.type == pygame.MOUSEBUTTONDOWN:
             for i in range(len(brushes)):
                 if brushes[i].collidepoint(event.pos):
@@ -86,6 +86,6 @@ while run:
             for i in range(len(colors)):
                 if colors[i].collidepoint(event.pos):
                     active_color = rgbs[i]
-        
+# обновляем экран и завершаем игру с помощью quit
     pygame.display.update()
 pygame.quit()
